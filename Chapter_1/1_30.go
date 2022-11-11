@@ -24,13 +24,25 @@ type Node struct { // A node is a point in a plane where the robot needs to move
 	y float64
 }
 
-type Visit struct {
+type ChainableNode struct {
+	x            float64
+	y            float64
+	connected_to *ChainableNode // this is used  in chaining nodes
+}
+
+type Visit struct { // represents a point and it's visit status
 	point         Node
 	visited       bool    // the bool denotes if the node/point has been visited
 	zero_distance float64 // distance from the 0 point, so the round trip can be made
 }
 
-func eucledian_distance(p1 Node, p2 Node) float64 {
+func eucledian_distance(p1, p2 Node) float64 {
+	distance := math.Sqrt(math.Pow(p1.x-p2.x, 2) + math.Pow(p1.y-p2.y, 2))
+
+	return distance
+}
+
+func eucledian_distance_chainable(p1, p2 ChainableNode) float64 {
 	distance := math.Sqrt(math.Pow(p1.x-p2.x, 2) + math.Pow(p1.y-p2.y, 2))
 
 	return distance
@@ -38,7 +50,7 @@ func eucledian_distance(p1 Node, p2 Node) float64 {
 
 // Heuristic 1	: Nearest Neighbor Heuristic
 
-func tour_nearest_neighbor(set []Node) { // The assumption here is that the 1st element of the set is the start point
+func tour_nearest_neighbor(set []Node) float64 { // The assumption here is that the 1st element of the set is the start point
 	fmt.Printf("Starting the tour using nearest neighbor heuristic.\n")
 
 	visits := []Visit{}
@@ -92,11 +104,19 @@ func tour_nearest_neighbor(set []Node) { // The assumption here is that the 1st 
 	current_visit = visits[0]
 	fmt.Printf("Completing round trip to point %v, Total distance covered: %f\n\n", current_visit.point, total_distance)
 	fmt.Printf("Current state:\n%+v\n\n", visits)
+
+	return total_distance
 }
+
+// Heuristic 2: Closest Pair Heuristic
+// TODO
+
+// Devising a better heuristic
+// TODO
 
 func main() {
 	set := []Node{ //set of points in 2D
-		{0, 0},
+		{0, 0}, //starting point on the 0th index
 		{-1, 0},
 		{1, 0},
 		{-5, 0},
@@ -105,5 +125,6 @@ func main() {
 		{11, 0},
 	}
 
-	tour_nearest_neighbor(set)
+	nearest_neighbor_dist := tour_nearest_neighbor(set)
+	fmt.Printf("Using nearest neighbor - %f", nearest_neighbor_dist)
 }

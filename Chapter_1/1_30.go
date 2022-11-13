@@ -24,16 +24,21 @@ type Node struct { // A node is a point in a plane where the robot needs to move
 	y float64
 }
 
-type ChainableNode struct {
-	x            float64
-	y            float64
-	connected_to *ChainableNode // this is used  in chaining nodes
+type Edge struct {
+	start Node
+	end   Node
+}
+
+type Chain struct { // a chain is a collection of joined nodes, with a start node and an end node
+	start Node
+	end   Node
+	edges []Edge
 }
 
 type Visit struct { // represents a point and it's visit status
-	point         Node
-	visited       bool    // the bool denotes if the node/point has been visited
-	zero_distance float64 // distance from the 0 point, so the round trip can be made
+	point               Node
+	visited             bool    // the bool denotes if the node/point has been visited
+	distance_from_start float64 // distance from the 0 point, so the round trip can be made
 }
 
 func eucledian_distance(p1, p2 Node) float64 {
@@ -42,16 +47,19 @@ func eucledian_distance(p1, p2 Node) float64 {
 	return distance
 }
 
-func eucledian_distance_chainable(p1, p2 ChainableNode) float64 {
-	distance := math.Sqrt(math.Pow(p1.x-p2.x, 2) + math.Pow(p1.y-p2.y, 2))
+// func eucledian_distance_chainable(p1, p2 Node) float64 {
+// 	distance := math.Sqrt(math.Pow(p1.x-p2.x, 2) + math.Pow(p1.y-p2.y, 2))
 
-	return distance
-}
+// 	return distance
+// }
 
 // Heuristic 1	: Nearest Neighbor Heuristic
 
-func tour_nearest_neighbor(set []Node) float64 { // The assumption here is that the 1st element of the set is the start point
+func tour_nearest_neighbor(set []Node) ([]Node, float64) { // The assumption here is that the 1st element of the set is the start point
+
 	fmt.Printf("Starting the tour using nearest neighbor heuristic.\n")
+
+	path := []Node{}
 
 	visits := []Visit{}
 	visit_idx := 0 // visit the start node/point first
@@ -59,13 +67,10 @@ func tour_nearest_neighbor(set []Node) float64 { // The assumption here is that 
 
 	// state initialization
 	for idx, point := range set {
-		current_distance := eucledian_distance(current_visit.point, point)
+		zero_distance := eucledian_distance(current_visit.point, point)
 		visited := idx == 0 //the first point is set to as visited
-		visits = append(visits, Visit{point, visited, current_distance})
+		visits = append(visits, Visit{point, visited, zero_distance})
 	}
-
-	fmt.Printf("Visiting point %v\n\n", current_visit.point)
-	fmt.Printf("Current state:\n%+v\n\n", visits)
 
 	all_nodes_visited := false
 	total_distance := 0.0 //tracking the total distance covered
@@ -75,41 +80,107 @@ func tour_nearest_neighbor(set []Node) float64 { // The assumption here is that 
 		min_distance := math.Inf(1) // initializing the minimum distance from point to inf
 		previous_nodes_visited := true
 
-		var next_visit Visit
-
 		for idx, visit := range visits {
 			if !visit.visited { // we only run for not visited points
 				distance := eucledian_distance(visit.point, current_visit.point)
 				if distance < min_distance {
 					min_distance = distance
-					next_visit = Visit{visit.point, true, visit.zero_distance}
 					visit_idx = idx
 				}
 			}
 		}
-		current_visit = next_visit // the final next visit obtained after the loop exits is the min distance visit
+		visits[visit_idx].visited = true  //updating the visit in the original visits slice
+		current_visit = visits[visit_idx] // the final next visit obtained after the loop exits is the min distance visit
 		total_distance += min_distance
-		visits[visit_idx] = current_visit //updating the visit in the original visits slice
+		path = append(path, current_visit.point)
 
 		for _, visit := range visits {
 			all_nodes_visited = visit.visited && previous_nodes_visited
 			previous_nodes_visited = all_nodes_visited
 		}
 
-		fmt.Printf("Visiting point %v, Total distance covered: %f\n\n", current_visit.point, total_distance)
-		fmt.Printf("Current state:\n%+v\n\n", visits)
 	}
 	// returning to the start point
-	total_distance += current_visit.zero_distance
+	total_distance += current_visit.distance_from_start
 	current_visit = visits[0]
-	fmt.Printf("Completing round trip to point %v, Total distance covered: %f\n\n", current_visit.point, total_distance)
-	fmt.Printf("Current state:\n%+v\n\n", visits)
 
-	return total_distance
+	return path, total_distance
 }
 
 // Heuristic 2: Closest Pair Heuristic
-// TODO
+// The book is way too vague on the heuristic, I used a local variation of this
+// similar to nearest neighbor
+
+func tour_closest_pair(set []Node) (Chain, float64) {
+
+	fmt.Printf("Starting the tour using closest pair heuristic.\n")
+
+	chain := Chain{set[0], set[0], []Edge{}}
+	current_visit := Visit{set[0], true, 0.0}
+
+	visits := []Visit{}
+	visit_idx := 0 // visit the start node/point first
+
+	// state initialization
+	for idx, point := range set {
+		zero_distance := eucledian_distance(current_visit.point, point)
+		visited := idx == 0 //the first point is set to as visited
+		visits = append(visits, Visit{point, visited, zero_distance})
+	}
+
+	total_distance := 0.0 //tracking the total distance covered
+	all_nodes_visited := false
+
+	for !all_nodes_visited { // run till all points are visited
+
+		previous_nodes_visited := true
+
+		min_distance := math.Inf(1) // initializing the minimum distance from point to inf
+		var start_bool bool         // denotes if we need to add an edge from the start or the end of the chain
+
+		for idx := 0; idx < len(visits); idx++ {
+			if !visits[idx].visited {
+				start_distance := eucledian_distance(visits[idx].point, chain.start)
+				end_distance := eucledian_distance(visits[idx].point, chain.end)
+				if (start_distance < min_distance || end_distance < min_distance) && (start_distance != 0 && end_distance != 0) {
+					fmt.Printf("current visit %v, visit distances %f %f\n\n", visits[idx].point, start_distance, end_distance)
+					start_bool = start_distance < end_distance
+					if start_bool {
+						min_distance = start_distance
+						visit_idx = idx
+					} else {
+						min_distance = end_distance
+						visit_idx = idx
+					}
+				}
+			}
+
+		}
+		visits[visit_idx].visited = true //updating the visit in the original visits slice
+		if start_bool {
+			chain.edges = append(chain.edges, Edge{visits[visit_idx].point, chain.start})
+			chain.start = visits[visit_idx].point
+			fmt.Printf("Chain after adding %v at %f distance %v\n\n", chain.start, min_distance, chain)
+		} else {
+			chain.edges = append(chain.edges, Edge{chain.end, visits[visit_idx].point})
+			chain.end = visits[visit_idx].point
+			fmt.Printf("Chain after adding %v at %f distance %v\n\n", chain.end, min_distance, chain)
+		}
+
+		current_visit = visits[visit_idx] // the final next visit obtained after the loop exits is the min distance visit
+		total_distance += min_distance
+
+		for _, visit := range visits {
+			all_nodes_visited = visit.visited && previous_nodes_visited
+			previous_nodes_visited = all_nodes_visited
+		}
+	}
+	// returning to the start point
+	chain.edges = append(chain.edges, Edge{chain.end, chain.start})
+	total_distance += eucledian_distance(chain.end, chain.start)
+
+	return chain, total_distance
+}
 
 // Devising a better heuristic
 // TODO
@@ -125,6 +196,9 @@ func main() {
 		{11, 0},
 	}
 
-	nearest_neighbor_dist := tour_nearest_neighbor(set)
-	fmt.Printf("Using nearest neighbor - %f", nearest_neighbor_dist)
+	nearest_neighbor_path, nearest_neighbor_dist := tour_nearest_neighbor(set)
+	fmt.Printf("Using nearest neighbor -\n Path:%v\nTotal Distance: %f", nearest_neighbor_path, nearest_neighbor_dist)
+
+	closest_pair_path, closest_pair_dist := tour_closest_pair(set)
+	fmt.Printf("Using closest pair -\n Path:%v\nTotal Distance: %f", closest_pair_path.edges, closest_pair_dist)
 }

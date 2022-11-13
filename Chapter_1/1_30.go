@@ -59,10 +59,9 @@ func tour_nearest_neighbor(set []Node) ([]Node, float64) { // The assumption her
 
 	fmt.Printf("Starting the tour using nearest neighbor heuristic.\n")
 
-	path := []Node{}
-
 	visits := []Visit{}
 	visit_idx := 0 // visit the start node/point first
+	path := []Node{set[visit_idx]}
 	current_visit := Visit{set[visit_idx], true, 0.0}
 
 	// state initialization
@@ -101,8 +100,8 @@ func tour_nearest_neighbor(set []Node) ([]Node, float64) { // The assumption her
 
 	}
 	// returning to the start point
+	path = append(path, visits[0].point)
 	total_distance += current_visit.distance_from_start
-	current_visit = visits[0]
 
 	return path, total_distance
 }
@@ -143,7 +142,6 @@ func tour_closest_pair(set []Node) (Chain, float64) {
 				start_distance := eucledian_distance(visits[idx].point, chain.start)
 				end_distance := eucledian_distance(visits[idx].point, chain.end)
 				if (start_distance < min_distance || end_distance < min_distance) && (start_distance != 0 && end_distance != 0) {
-					fmt.Printf("current visit %v, visit distances %f %f\n\n", visits[idx].point, start_distance, end_distance)
 					start_bool = start_distance < end_distance
 					if start_bool {
 						min_distance = start_distance
@@ -160,11 +158,9 @@ func tour_closest_pair(set []Node) (Chain, float64) {
 		if start_bool {
 			chain.edges = append(chain.edges, Edge{visits[visit_idx].point, chain.start})
 			chain.start = visits[visit_idx].point
-			fmt.Printf("Chain after adding %v at %f distance %v\n\n", chain.start, min_distance, chain)
 		} else {
 			chain.edges = append(chain.edges, Edge{chain.end, visits[visit_idx].point})
 			chain.end = visits[visit_idx].point
-			fmt.Printf("Chain after adding %v at %f distance %v\n\n", chain.end, min_distance, chain)
 		}
 
 		current_visit = visits[visit_idx] // the final next visit obtained after the loop exits is the min distance visit
@@ -186,19 +182,27 @@ func tour_closest_pair(set []Node) (Chain, float64) {
 // TODO
 
 func main() {
-	set := []Node{ //set of points in 2D
-		{0, 0}, //starting point on the 0th index
-		{-1, 0},
-		{1, 0},
-		{-5, 0},
-		{3, 0},
-		{-21, 0},
-		{11, 0},
+	// set := []Node{ //set of points in 2D
+	// 	{0, 0}, //starting point on the 0th index
+	// 	{-1, 0},
+	// 	{1, 0},
+	// 	{-5, 0},
+	// 	{3, 0},
+	// 	{-21, 0},
+	// 	{11, 0},
+	// }
+	set := []Node{
+		{0, 0.9},
+		{0, 0},
+		{1.1, 0},
+		{1.1, 0.9},
+		{2.2, 0.9},
+		{2.2, 0},
 	}
 
 	nearest_neighbor_path, nearest_neighbor_dist := tour_nearest_neighbor(set)
-	fmt.Printf("Using nearest neighbor -\n Path:%v\nTotal Distance: %f", nearest_neighbor_path, nearest_neighbor_dist)
+	fmt.Printf("Using nearest neighbor -\n Path:%v\nTotal Distance: %f\n\n", nearest_neighbor_path, nearest_neighbor_dist)
 
 	closest_pair_path, closest_pair_dist := tour_closest_pair(set)
-	fmt.Printf("Using closest pair -\n Path:%v\nTotal Distance: %f", closest_pair_path.edges, closest_pair_dist)
+	fmt.Printf("Using closest pair -\n Path:%v\nTotal Distance: %f\n\n", closest_pair_path.edges, closest_pair_dist)
 }

@@ -12,11 +12,12 @@
 	Output		: What is the shortest cycle tour that visits each point in the set S?
 */
 
-package main
+package chapter1
 
 import (
 	"fmt"
 	"math"
+	"time"
 )
 
 type Node struct { // A node is a point in a plane where the robot needs to move
@@ -46,12 +47,6 @@ func eucledian_distance(p1, p2 Node) float64 {
 
 	return distance
 }
-
-// func eucledian_distance_chainable(p1, p2 Node) float64 {
-// 	distance := math.Sqrt(math.Pow(p1.x-p2.x, 2) + math.Pow(p1.y-p2.y, 2))
-
-// 	return distance
-// }
 
 // Heuristic 1	: Nearest Neighbor Heuristic
 
@@ -181,28 +176,34 @@ func tour_closest_pair(set []Node) (Chain, float64) {
 // Devising a better heuristic
 // TODO
 
-func main() {
-	// set := []Node{ //set of points in 2D
-	// 	{0, 0}, //starting point on the 0th index
-	// 	{-1, 0},
-	// 	{1, 0},
-	// 	{-5, 0},
-	// 	{3, 0},
-	// 	{-21, 0},
-	// 	{11, 0},
-	// }
-	set := []Node{
-		{0, 0.9},
-		{0, 0},
-		{1.1, 0},
-		{1.1, 0.9},
-		{2.2, 0.9},
-		{2.2, 0},
+func Problem_30() {
+	set := []Node{ //set of points in 2D
+		{0, 0}, //starting point on the 0th index
+		{-1, 0},
+		{1, 0},
+		{-5, 0},
+		{3, 0},
+		{-21, 0},
+		{11, 0},
 	}
+	// set := []Node{
+	// 	{0, 0.9},
+	// 	{0, 0},
+	// 	{1.1, 0},
+	// 	{1.1, 0.9},
+	// 	{2.2, 0.9},
+	// 	{2.2, 0},
+	// 	{3.2, 4},
+	// 	{3.3, 0},
+	// 	{10, 0},
+	// 	{4, 12},
+	// }
 
+	start1 := time.Now()
 	nearest_neighbor_path, nearest_neighbor_dist := tour_nearest_neighbor(set)
-	fmt.Printf("Using nearest neighbor -\n Path:%v\nTotal Distance: %f\n\n", nearest_neighbor_path, nearest_neighbor_dist)
+	fmt.Printf("Using nearest neighbor -\n Path:%v\nTotal Distance: %f, executed in: %s\n\n", nearest_neighbor_path, nearest_neighbor_dist, time.Since(start1))
 
+	start2 := time.Now()
 	closest_pair_path, closest_pair_dist := tour_closest_pair(set)
-	fmt.Printf("Using closest pair -\n Path:%v\nTotal Distance: %f\n\n", closest_pair_path.edges, closest_pair_dist)
+	fmt.Printf("Using closest pair -\n Path:%v\nTotal Distance: %f, executed in: %s\n\n", closest_pair_path.edges, closest_pair_dist, time.Since(start2))
 }

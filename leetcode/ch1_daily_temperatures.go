@@ -36,33 +36,44 @@ func dailyTemperatures(temperatures []int) []int {
 	return wait_days
 }
 
+// custom integer stack implementation
+type stack []int
+
+func (s *stack) Push(v int) {
+	*s = append(*s, v)
+}
+
+func (s *stack) Pop() int {
+	res := (*s)[len(*s)-1]
+	*s = (*s)[:len(*s)-1]
+	return res
+}
+
+// TODO see other approaches
 // ref: https://leetcode.com/problems/daily-temperatures/solutions/1574808/c-python-3-simple-solutions-w-explanation-examples-images-2-monotonic-stack-approaches/
 func dailyTemperatures_stack(temperatures []int) []int {
-	indices_stack := []int{}
+	indices_stack := stack{}
 	wait_days := []int{}
-	stack_start := 0
-	for day := 1; day < len(temperatures); day++ {
+	for day := 0; day < len(temperatures); day++ {
 		wait_days = append(wait_days, 0) // the default case, where there is no future day for which this is possible
-		if temperatures[day-1] > temperatures[day] {
-			indices_stack = append(indices_stack, day-1)
-		} else {
-			for idx := stack_start; idx < len(indices_stack); idx++ {
-				diff := day - 1 - indices_stack[idx]
-				wait_days = append(wait_days, diff)
-			}
-			stack_start = len(indices_stack) - 1
+		for len(indices_stack) != 0 && temperatures[day] > temperatures[indices_stack[len(indices_stack)-1]] {
+			diff := day - indices_stack[len(indices_stack)-1]
+			wait_days[indices_stack[len(indices_stack)-1]] = diff
+			indices_stack.Pop()
 		}
+		indices_stack.Push(day)
+		// fmt.Printf("stack %v, wait_days %v pop indices %v\n\n", indices_stack, wait_days, pop_indices)
 	}
 	return wait_days
 }
 
 func Run() {
 	start1 := time.Now()
-	temperatures := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160} // the worst case scenario for a brute force solution
+	temperatures := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 50, 60, 70, 80, 90, 100} // the worst case scenario for a brute force solution
 	wait_days := dailyTemperatures(temperatures)
-	fmt.Printf("Brute Force approach -> wait days array = %v, execution time: %s\n\n", wait_days, time.Since(start1)) // this is approx n^2 time
+	fmt.Printf("Brute Force approach -> wait days array = %v, execution time: %s\n\n", wait_days, time.Since(start1)) // this is approx O(n^2) time
 	start2 := time.Now()
-	wait_days2 := dailyTemperatures(temperatures)
-	fmt.Printf("Stack approach -> wait days array = %v, execution time: %s\n\n", wait_days2, time.Since(start2)) // this is approx n^2 time
+	wait_days2 := dailyTemperatures_stack(temperatures)
+	fmt.Printf("Stack approach -> wait days array = %v, execution time: %s\n\n", wait_days2, time.Since(start2)) // this is approx O(n) time
 
 }

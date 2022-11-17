@@ -67,7 +67,7 @@ func rotateRight(head *ListNode, k int) *ListNode {
 
 	count := countList(head)
 
-	if count == 0 || count == 1 {
+	if count == 0 || count == 1 { // the same list if no rotations or only one/zero elements in list
 		return head
 	}
 
@@ -75,13 +75,13 @@ func rotateRight(head *ListNode, k int) *ListNode {
 	var effective_rotations int
 	effective_rotations = k % count
 
-	if effective_rotations == 0 { // the same list if no rotations or only one/zero elements in list
+	if effective_rotations == 0 {
 		return head
 	}
 
 	temp_head := connectList(head, count)
 
-	// changes the head and tail of the list to fit req
+	// changes the head and tail of the list to fit rotation requirements
 	var new_head *ListNode
 	for i := 0; i < count; i++ {
 		if i == count-effective_rotations-1 {

@@ -176,7 +176,7 @@ func tour_closest_pair(set []Node) (Chain, float64) {
 // Devising a better heuristic
 // TODO
 
-func Problem_30() {
+func Run_30() {
 	set := []Node{ //set of points in 2D
 		{0, 0}, //starting point on the 0th index
 		{-1, 0},

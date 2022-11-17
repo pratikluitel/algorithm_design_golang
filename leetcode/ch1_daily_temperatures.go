@@ -7,6 +7,8 @@
 				  return an array answer such that answer[i] is the number of days you have to wait
 				  after the ith day to get a warmer temperature.
 				  If there is no future day for which this is possible, keep answer[i] == 0 instead.
+
+	Link		: https://leetcode.com/problems/daily-temperatures/
 */
 
 package leetcode
@@ -62,12 +64,11 @@ func dailyTemperatures_stack(temperatures []int) []int {
 			indices_stack.Pop()
 		}
 		indices_stack.Push(day)
-		// fmt.Printf("stack %v, wait_days %v pop indices %v\n\n", indices_stack, wait_days, pop_indices)
 	}
 	return wait_days
 }
 
-func Run() {
+func Run_1() {
 	start1 := time.Now()
 	temperatures := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 50, 60, 70, 80, 90, 100} // the worst case scenario for a brute force solution
 	wait_days := dailyTemperatures(temperatures)

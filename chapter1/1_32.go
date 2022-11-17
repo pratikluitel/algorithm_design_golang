@@ -63,7 +63,7 @@ func divide_non_recursive(numerator int, denominator int) (int, int) {
 	return quotient, numerator
 }
 
-func Problem_32() {
+func Run_32() {
 	for i := -5; i < 6; i++ {
 		for j := -5; j < 6; j++ {
 			if j == 0 {

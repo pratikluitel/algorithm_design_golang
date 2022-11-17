@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	chapter1.Problem_30()
-	chapter1.Problem_32()
-	leetcode.Run()
+	chapter1.Run_30()
+	chapter1.Run_32()
+	leetcode.Run_1()
+	leetcode.Run_2()
 }

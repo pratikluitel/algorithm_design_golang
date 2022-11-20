@@ -10,7 +10,10 @@
 
 package leetcode
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 // Definition for singly-linked list.
 type ListNode struct {
@@ -18,8 +21,9 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func display_list(head *ListNode) { // display the whole linked list when the head of the list is supplied
-	fmt.Printf("Linked list:\n%v->", head.Val)
+// Display the whole linked list when the head of the list is supplied.
+func display_list(head *ListNode) {
+	fmt.Printf("%v->", head.Val)
 	for {
 		if head.Next == nil {
 			break
@@ -28,89 +32,71 @@ func display_list(head *ListNode) { // display the whole linked list when the he
 		head = head.Next
 
 	}
-	fmt.Printf("\n")
+	fmt.Printf("\n\n")
 	return
 }
 
-func countList(head *ListNode) int { //counts the number of elements in the linked list
-	count := 0
+// converts non circular linked list to circular
+func countAndConnectList(head *ListNode) (*ListNode, int) {
 	if head == nil {
-		return count
+		return head, 0
 	}
-	for head != nil {
+	first_node := head
+	count := 1
+	for head.Next != nil {
 		head = head.Next
 		count++
 	}
+	head.Next = first_node
 
-	return count
+	return head.Next, count //return the first node
 }
 
-func connectList(head *ListNode, count int) *ListNode { // converts non circular linked list to circular
-	var first_node *ListNode
-	temp_head := head
-
-	for i := 0; i < count; i++ {
-		if i == 0 {
-			first_node = temp_head
-		}
-		if head.Next == nil {
-			temp_head.Next = first_node
-		} else {
-			head = head.Next
-		}
-		temp_head = temp_head.Next
-	}
-	return temp_head
-}
-
+// Rotates a linked list right by k times
 func rotateRight(head *ListNode, k int) *ListNode {
 
-	count := countList(head)
+	var effective_rotations int
+	var new_head *ListNode
+	head, count := countAndConnectList(head)
 
-	if count == 0 || count == 1 { // the same list if no rotations or only one/zero elements in list
+	if count == 0 { // the same list if zero elements in list
 		return head
 	}
 
-	/// since rotation is cyclic i.e. rotating 6 number of times is the same as rotating 1 time for a 5 length linked list
-	var effective_rotations int
+	// since rotation is cyclic e.g. rotating 6 number of times is the same as rotating 1 time for a 5 length linked list
 	effective_rotations = k % count
 
-	if effective_rotations == 0 {
-		return head
-	}
-
-	temp_head := connectList(head, count)
-
 	// changes the head and tail of the list to fit rotation requirements
-	var new_head *ListNode
-	for i := 0; i < count; i++ {
-		if i == count-effective_rotations-1 {
-			new_head = temp_head.Next
-			temp_head.Next = nil
-			break
-		}
-		temp_head = temp_head.Next
+	for i := 0; i < count-effective_rotations-1; i++ {
+		head = head.Next
 	}
+	new_head = head.Next
+	head.Next = nil
 
 	return new_head
 }
 
 func Run_2() {
-	// a 1->2->3->4->5 linked list
-	list := []ListNode{}
+	// creating a 1->2->3->4->5->...->59-> linked list
+	list := []*ListNode{}
 
-	for i := 1; i < 6; i++ {
+	for i := 1; i < 60; i++ {
 		if i == 1 {
-			node := ListNode{6 - i, nil}
-			list = append(list, node)
+			node := ListNode{60 - i, nil}
+			list = append(list, &node)
 		} else {
-			node := ListNode{6 - i, &list[len(list)-1]}
-			list = append(list, node)
+			node := ListNode{60 - i, list[len(list)-1]}
+			list = append(list, &node)
 		}
 
 	}
 	head := list[len(list)-1]
-	display_list(&head)
-	new_head := rotateRight(&head, 9)
+	display_list(head)
+
+	k := 40
+	start := time.Now()
+	new_head := rotateRight(head, k)
+	fmt.Printf("Rotation complete, rotated %d times, execution time:%s\n\nRotated result:\n", k, time.Since(start))
+
 	display_list(new_head)
 }

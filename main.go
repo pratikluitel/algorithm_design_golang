@@ -10,4 +10,5 @@ func main() {
 	chapter1.Run_32()
 	leetcode.Run_1()
 	leetcode.Run_2()
+	leetcode.Run_3()
 }

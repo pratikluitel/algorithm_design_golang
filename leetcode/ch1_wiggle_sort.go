@@ -72,7 +72,7 @@ func wiggleSort_brute(nums []int) []int {
 
 // Slightly faster than brute force. Just a small optimization with ref:
 //
-// https://leetcode.com/problems/wiggle-sort-ii/solutions/77684/summary-of-the-various-solutions-to-wiggle-sort-for-your-reference/?orderBy=most_votes
+// https://leetcode.com/problems/wiggle-sort-ii/solutions/77684/summary-of-the-various-solutions-to-wiggle-sort-for-your-reference/
 //
 // In the brute force algorithm, we place the sorted elements serially, i.e. smallest -> median first (even indices), then median -> largest (odd indices)
 // Equal values can occur near the median, which can occur in adjacent indices (since we are placing everything serially)

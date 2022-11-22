@@ -34,27 +34,34 @@ func sortList(nums []int32) []int32 {
 	return sorted_list
 }
 
-// TODO this is incorrect heuristic for large lists, need to optimize
+// TODO: doesn't work for large inputs, need to review
 func hackerlandRadioTransmitters(x []int32, k int32) int32 {
-	x = sortList(x)
-	min_idx := 0
-	nodes := []int32{}
-	for idx, val := range x {
-		max_val := val + k
-		for jdx := min_idx; jdx < len(x) && x[jdx] <= max_val; jdx++ {
-			min_idx = jdx
-		}
-
-		if idx == 0 || nodes[len(nodes)-1]+k < x[min_idx] {
-			nodes = append(nodes, x[min_idx])
-		}
+	if x == nil {
+		return 0
 	}
+	x = sortList(x)
+	fmt.Printf("Sorted array: %v\n", x)
+	nodes := []int32{}
+
+	last_node_location := x[0]
+	for idx := 0; idx < len(x); idx++ {
+		distance := x[idx] - last_node_location
+		if len(nodes) == 0 && distance > k {
+			nodes = append(nodes, x[idx-1])
+			last_node_location = x[idx]
+		} else if len(nodes) != 0 && distance > k {
+			nodes = append(nodes, x[idx])
+			last_node_location = x[idx]
+		}
+		fmt.Printf("At node: %d, last node: %d, Transmitters placed: %v\n", x[idx], last_node_location, nodes)
+	}
+
 	fmt.Printf("Transmitters at: %v\n", nodes)
 	return int32(len(nodes))
 }
 
 func Run_3() {
-	x := []int32{7, 2, 4, 6, 5, 9, 12, 11}
+	x := []int32{7, 2, 4, 6, 5, 9, 11, 12}
 	var k int32 = 2
 	fmt.Printf("Original array: %v, range: %d\n", x, k)
 	pos := hackerlandRadioTransmitters(x, k)

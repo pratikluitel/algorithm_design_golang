@@ -29,7 +29,7 @@ func kangaroo(x1 int, v1 int, x2 int, v2 int) string {
 		diff := math.Abs(float64(pos1 - pos2))
 		if diff == 0.0 {
 			return "YES"
-		} else if diff >= prev_diff { // if the difference starts increasing or keeps staying the same, the second kangaroo is already past the point of catching up
+		} else if diff >= prev_diff { // if the difference starts increasing or keeps staying the same, the second kangaroo is already past the point of catching up and hence the two cannot meet
 			return "NO"
 		}
 		prev_diff = diff
@@ -38,6 +38,7 @@ func kangaroo(x1 int, v1 int, x2 int, v2 int) string {
 
 func Run_2() {
 	start := time.Now()
-	can := kangaroo(0, 3, 4, 2)
-	fmt.Printf("Can the two kangaroos meet? ->%s, execution time: %s\n\n", can, time.Since(start))
+	x1, v1, x2, v2 := 0, 3, 4, 2
+	can := kangaroo(x1, v1, x2, v2)
+	fmt.Printf("Inputs: kangaroo1 - pos: %d, speed: %d. kangaroo2 - pos: %d, speed:%d.\nCan the two kangaroos meet? -> %s, execution time: %s\n\n", x1, v1, x2, v2, can, time.Since(start))
 }

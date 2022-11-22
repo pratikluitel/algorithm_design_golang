@@ -74,5 +74,5 @@ func Run_1() {
 	fmt.Printf("initial: %v, rotated %v, execution time: %s\n", arr, new_arr, time.Since(start1))
 	start2 := time.Now()
 	new_arr_alt := rotate_alternate(d, arr_c, "right")
-	fmt.Printf("initial: %v, rotated %v, execution time: %s\n", arr, new_arr_alt, time.Since(start2))
+	fmt.Printf("initial: %v, rotated %v, execution time: %s\n\n", arr, new_arr_alt, time.Since(start2))
 }

@@ -13,4 +13,6 @@ func main() {
 	leetcode.Run_2()
 	leetcode.Run_3()
 	hackerrank.Run_1()
+	hackerrank.Run_2()
+	hackerrank.Run_3()
 }

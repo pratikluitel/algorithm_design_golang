@@ -14,22 +14,9 @@ package leetcode
 import (
 	"fmt"
 	"time"
-)
 
-func sortList(nums []int) []int {
-	sorted_list := []int{}
-	for _, num := range nums {
-		sorted_list = append(sorted_list, num)
-		for idx := len(sorted_list) - 1; idx > 0; idx-- {
-			if sorted_list[idx] < sorted_list[idx-1] {
-				temp_num := sorted_list[idx]
-				sorted_list[idx] = sorted_list[idx-1]
-				sorted_list[idx-1] = temp_num
-			}
-		}
-	}
-	return sorted_list
-}
+	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/utils"
+)
 
 // wiggles the slice:
 //
@@ -39,7 +26,7 @@ func sortList(nums []int) []int {
 //
 // once the slive length runs out, inserts them in every odd index (1,3,5,...) -> the largest n/2 numbers in odd indices
 func wiggleSort_brute(nums []int) []int {
-	sorted_list := sortList(nums)
+	sorted_list, _ := utils.SortList(nums)
 	list_len := len(sorted_list)
 	mid_point := int((list_len + 1) / 2) // mid point is n/2+1 for odd length slice and n/2 for even length slice
 
@@ -90,7 +77,7 @@ func wiggleSort_brute(nums []int) []int {
 //
 // similar values have a chance of occuring near the median, as the medians are at either extreme left (0 index) or extreme right (end of array) they don't occur adjacently
 func wiggleSort_nlogn(nums []int) []int {
-	sorted_list := sortList(nums)
+	sorted_list, _ := utils.SortList(nums)
 	list_len := len(sorted_list)
 	mid_point := int((list_len + 1) / 2) // mid point is n/2+1 for odd length slice and n/2 for even length slice
 

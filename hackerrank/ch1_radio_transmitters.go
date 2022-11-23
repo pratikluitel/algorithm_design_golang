@@ -17,31 +17,20 @@
 
 package hackerrank
 
-import "fmt"
+import (
+	"fmt"
 
-func sortList(nums []int32) []int32 {
-	sorted_list := []int32{}
-	for _, num := range nums {
-		sorted_list = append(sorted_list, num)
-		for idx := len(sorted_list) - 1; idx > 0; idx-- {
-			if sorted_list[idx] < sorted_list[idx-1] {
-				temp_num := sorted_list[idx]
-				sorted_list[idx] = sorted_list[idx-1]
-				sorted_list[idx-1] = temp_num
-			}
-		}
-	}
-	return sorted_list
-}
+	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/utils"
+)
 
 // TODO: doesn't work for large inputs, need to review
-func hackerlandRadioTransmitters(x []int32, k int32) int32 {
+func hackerlandRadioTransmitters(x []int, k int) int {
 	if x == nil {
 		return 0
 	}
-	x = sortList(x)
+	x, _ = utils.SortList(x)
 	fmt.Printf("Sorted array: %v\n", x)
-	nodes := []int32{}
+	nodes := []int{}
 
 	last_node_location := x[0]
 	for idx := 0; idx < len(x); idx++ {
@@ -57,12 +46,12 @@ func hackerlandRadioTransmitters(x []int32, k int32) int32 {
 	}
 
 	fmt.Printf("Transmitters at: %v\n", nodes)
-	return int32(len(nodes))
+	return len(nodes)
 }
 
 func Run_3() {
-	x := []int32{7, 2, 4, 6, 5, 9, 11, 12}
-	var k int32 = 2
+	x := []int{7, 2, 4, 6, 5, 9, 11, 12}
+	k := 2
 	fmt.Printf("Original array: %v, range: %d\n", x, k)
 	pos := hackerlandRadioTransmitters(x, k)
 	fmt.Printf("Min number of transmitters needed: %v\n\n", pos)

@@ -1,5 +1,6 @@
 package utils
 
+// TODO dtype independent sorting
 // sorts list, also returns an array with the indices from the old list
 func SortList(nums []int) ([]int, []int) {
 	sorted_list := []int{}

@@ -11,40 +11,42 @@ package leetcode
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"time"
+
+	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/utils"
 )
 
-func removeKdigits(num string, k int) string {
+// TODO working for 28/43 need to apply stack for an optimal solution
+func pre_zero_removal(num string, k int) string {
 	new_length := len(num) - k
+	fmt.Printf("Removing %d digits from %s\n", k, num)
+	if k == 0 {
+		return num
+	}
 	if new_length <= 0 {
 		return "0"
 	}
-	k_digits_removed := ""
-	min_num := math.Inf(1)
-	for idx := 0; idx < len(num) && len(k_digits_removed) != new_length; idx++ {
-		digit, _ := strconv.Atoi(string(num[idx]))
+	possible_options := num[:k+1]
+	max_idx, maximum_num := utils.StringMax(possible_options)
+	fmt.Printf("Checked in %s, minimum number: %s\n", possible_options, maximum_num)
 
-		fmt.Printf("%d %f\n", digit, min_num)
-		if float64(digit) <= min_num {
-			k_digits_removed += fmt.Sprint(digit)
-			min_num = float64(digit)
-		}
-	}
+	new_num := num[:max_idx] + num[max_idx+1:] // remove the element
 
-	// removing the leading zeros
-	for i := 0; len(k_digits_removed) > 1 && string(k_digits_removed[i]) == "0"; i++ {
-		k_digits_removed = k_digits_removed[i+1:]
-	}
+	return pre_zero_removal(new_num, k-1)
+}
 
-	return k_digits_removed
+func removeKdigits(num string, k int) string {
+	k_removed_num := pre_zero_removal(num, k)
+	converted_int, _ := strconv.Atoi(k_removed_num)
+
+	return fmt.Sprint(converted_int)
 }
 
 func Run_4() {
-	num := "1432219"
-	k := 3
+	num := "112"
+	k := 1
 	str_removed := removeKdigits(num, k)
 	start := time.Now()
-	fmt.Printf("Start number: %s, string removed %s, execution time: %s\n", num, str_removed, time.Since(start))
+	fmt.Printf("Start number: %s, %d strings removed: %s, execution time: %s\n", num, k, str_removed, time.Since(start))
 }

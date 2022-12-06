@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+//TODO not giving optimal solution, fix
+
 func removeKdigits(num string, k int) string {
 	final_len := len(num) - k
 

@@ -1,7 +1,7 @@
 /*
 	Code Author	: github.com/pratikluitel
 	Book		: The Algorithm Design Manual, written by Steven S Skiena
-	Chapter 	: 1
+	Chapter 	: 2
 	Title		: Given string num representing a non-negative integer num, and an integer k,
 				  return the smallest possible integer after removing k digits from num.
 	Link		: https://leetcode.com/problems/remove-k-digits/

@@ -20,4 +20,5 @@ func main() {
 	programming_challenges.Run_1()
 	leetcode.Run_4()
 	misc.Run_1()
+	leetcode.Run_5()
 }

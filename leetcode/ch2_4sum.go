@@ -18,30 +18,50 @@ package leetcode
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/utils"
 )
 
 // check if a particular combination is in a slice composed of combinations
 func inCombinations(combinations [][]int, combination []int) bool {
+	var matched bool
 	for _, comb := range combinations {
-		matches := 0
-		for _, term1 := range comb {
-			for _, term2 := range combination {
-				if term1 == term2 {
-					matches += 1
-					break
-				}
+		// to check equality of 2 slices, sort them and compare element by element
+		matched = true
+		for idx, val := range comb {
+			if val != combination[idx] {
+				matched = false
+				break
 			}
 		}
-		if matches == len(combination) {
+		if matched {
 			return true
 		}
 	}
 	return false
 }
 
-// TODO: this is working for 240/290 cases. It is slow. Need to fix
+func twoSum(nums []int, target int) [][]int {
+	combinations := [][]int{}
+	lo, hi := 0, len(nums)-1
+
+	for lo < hi {
+		if nums[lo]+nums[hi] == target {
+			combn, _ := utils.SortList([]int{nums[lo], nums[hi]})
+			combinations = append(combinations, combn)
+			lo++
+			hi--
+		} else if nums[lo]+nums[hi] > target || (hi != len(nums)-1 && nums[hi] == nums[hi+1]) {
+			hi--
+		} else if nums[lo]+nums[hi] < target || (lo != 0 && nums[lo] == nums[lo-1]) {
+			lo++
+		}
+	}
+	return combinations
+}
+
+// TODO: working, but slow. Need to optimize
 
 // given a slice `nums` with `n` integers
 // and a target integer `target`
@@ -50,37 +70,26 @@ func inCombinations(combinations [][]int, combination []int) bool {
 //
 // return all possible unique combinations of elements
 func kSum(nums []int, target int, k int) [][]int {
-	nums, _ = utils.SortList(nums)
-	combinations := [][]int{}
-
-	if k == 2 { // terminating case
-		for jdx, val1 := range nums {
-			for idx := jdx + 1; idx < len(nums); idx++ {
-				val2 := nums[idx]
-				in_combinations := inCombinations(combinations, []int{val1, val2})
-				// fmt.Printf("Combinations: %v, %v in combinations? %t\n", combinations, []int{val1, val2}, in_combinations)
-				if val1+val2 == target && !in_combinations {
-					combinations = append(combinations, []int{val1, val2})
-				}
-			}
-		}
-		fmt.Printf("\nTarget: %d, Combinations: %v\n", target, combinations)
-		return combinations
+	// check for certainty that the number cannot reach/ will overshoot the target
+	if len(nums) == 0 || nums[0] > target/k || nums[len(nums)-1] < target/k {
+		return [][]int{}
 	}
 
+	if k == 2 { // terminating case
+		return twoSum(nums, target)
+	}
+
+	combinations := [][]int{}
+
 	for idx, val := range nums {
-		nums_temp := make([]int, len(nums))
-		copy(nums_temp, nums)
-		new_nums := append(nums_temp[:idx], nums_temp[idx+1:]...)
-		fmt.Printf("\nNew nums: %v\n", new_nums)
+		new_nums := nums[idx+1:]
 		combs := kSum(new_nums, target-val, k-1)
 		if len(combs) != 0 {
 			for _, comb := range combs {
-				combn := append(comb, val)
+				combn, _ := utils.SortList(append(comb, val))
 				in_combinations := inCombinations(combinations, combn)
 				if !in_combinations {
 					combinations = append(combinations, combn)
-					fmt.Printf("\nTarget: %d, Combinations: %v\n", target, combinations)
 				}
 			}
 		}
@@ -89,6 +98,10 @@ func kSum(nums []int, target int, k int) [][]int {
 }
 
 func Run_6() {
-	combs := kSum([]int{2, -4, -5, -2, -3, -5, 0, 4, -2}, -14, 4)
-	fmt.Printf("%v\n", combs)
+	ip := []int{0, 1, 3, -5, 3, 0}
+	start := time.Now()
+	input, _ := utils.SortList(ip)
+	t := 1
+	combs := kSum(input, t, 4)
+	fmt.Printf("\ninput: %v, target: %d, combinations: %v, execution time: %s\n", input, t, combs, time.Since(start))
 }

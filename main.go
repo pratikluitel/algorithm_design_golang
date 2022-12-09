@@ -21,4 +21,5 @@ func main() {
 	leetcode.Run_4()
 	misc.Run_1()
 	leetcode.Run_5()
+	leetcode.Run_6()
 }

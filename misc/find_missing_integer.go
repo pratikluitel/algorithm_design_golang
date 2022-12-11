@@ -9,11 +9,6 @@
 
 package misc
 
-import (
-	"fmt"
-	"time"
-)
-
 func find_missing(arr []int) int {
 	ideal_sum := (len(arr) + 1) * (len(arr) + 2) / 2
 	sum := 0
@@ -21,16 +16,4 @@ func find_missing(arr []int) int {
 		sum += val
 	}
 	return ideal_sum - sum
-}
-
-func Run_1() {
-	arr := []int{}
-	for i := 1; i <= 9; i++ {
-		if i != 5 {
-			arr = append(arr, i)
-		}
-	}
-	missing := find_missing(arr)
-	start := time.Now()
-	fmt.Printf("\nOriginal Array: %v, Missing value: %d execution time: %s\n", arr, missing, time.Since(start))
 }

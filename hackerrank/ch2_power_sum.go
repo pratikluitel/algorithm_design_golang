@@ -8,6 +8,7 @@
 				  The only solution is 2^2 + 3^2.
 
 	Link		: https://www.hackerrank.com/challenges/the-power-sum/problem
+	Bonus		: https://leetcode.com/problems/check-if-number-is-a-sum-of-powers-of-three/
 
 */
 

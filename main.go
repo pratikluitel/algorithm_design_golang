@@ -4,6 +4,7 @@ import (
 	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/chapter1"
 	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/hackerrank"
 	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/leetcode"
+	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/misc"
 	"github.com/pratikluitel/o_riley_algorithm_design_manual_excercises/programming_challenges"
 )
 
@@ -22,4 +23,5 @@ func main() {
 	leetcode.Run_6()
 	hackerrank.Run_4()
 	hackerrank.Run_5()
+	misc.Run()
 }

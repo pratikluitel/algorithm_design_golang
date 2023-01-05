@@ -1,8 +1,14 @@
 package utils
 
-// sorts list, also returns an array with the indices from the old list
-func SortList[Sortable int | int32 | int64 | float32 | float64](nums []Sortable) ([]Sortable, []int) {
-	sorted_list := []Sortable{}
+type Sortable interface {
+	int | int32 | int64 | float32 | float64
+}
+
+// sorts list, also returns an array with the indices from the old list.
+//
+// if you pass a string to this, make sure that it is a slice of runes, and not of the string type.
+func Sort[S Sortable](nums []S) ([]S, []int) {
+	sorted_list := []S{}
 	sorted_indices := []int{}
 	for jdx, num := range nums {
 		sorted_list = append(sorted_list, num)

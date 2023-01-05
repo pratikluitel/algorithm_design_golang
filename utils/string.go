@@ -6,8 +6,6 @@ import (
 	"strconv"
 )
 
-// TODO dtype independent sorting, combine list and string to one package
-
 func partition(str string, pivots string) (string, string, string) {
 	low_partition := ""
 	high_partition := ""
@@ -49,21 +47,6 @@ func partition(str string, pivots string) (string, string, string) {
 func QuickSort(str string) string {
 	_, _, sorted_str := partition(str, "") // no pivots initially
 	return sorted_str
-}
-
-func SortString(str string) string {
-	sorted_string := ""
-	for _, ch := range str {
-		sorted_string += string(ch)
-		for idx := len(sorted_string) - 1; idx > 0; idx-- {
-			if sorted_string[idx] < sorted_string[idx-1] {
-				temp_num := sorted_string[idx]
-				sorted_string = sorted_string[:idx] + string(sorted_string[idx-1]) + sorted_string[idx+1:]
-				sorted_string = sorted_string[:idx-1] + string(temp_num) + sorted_string[idx:]
-			}
-		}
-	}
-	return sorted_string
 }
 
 // finds the alphabet wise minimum length 1 substring of str, and its position

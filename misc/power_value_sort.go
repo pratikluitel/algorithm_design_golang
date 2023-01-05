@@ -34,7 +34,7 @@ func getKth(lo int, hi int, k int) int {
 		power_arr = append(power_arr, power(num))
 		nums = append(nums, num)
 	}
-	_, indices_sorted := utils.SortList(power_arr)
+	_, indices_sorted := utils.Sort(power_arr)
 	nums_cpy := make([]int, len(nums))
 	copy(nums_cpy, nums)
 	for idx, val := range indices_sorted {

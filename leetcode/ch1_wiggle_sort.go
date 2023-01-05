@@ -26,7 +26,7 @@ import (
 //
 // once the slive length runs out, inserts them in every odd index (1,3,5,...) -> the largest n/2 numbers in odd indices
 func wiggleSort_brute(nums []int) []int {
-	sorted_list, _ := utils.SortList(nums)
+	sorted_list, _ := utils.Sort(nums)
 	list_len := len(sorted_list)
 	mid_point := int((list_len + 1) / 2) // mid point is n/2+1 for odd length slice and n/2 for even length slice
 
@@ -77,7 +77,7 @@ func wiggleSort_brute(nums []int) []int {
 //
 // similar values have a chance of occuring near the median, as the medians are at either extreme left (0 index) or extreme right (end of array) they don't occur adjacently
 func wiggleSort_nlogn(nums []int) []int {
-	sorted_list, _ := utils.SortList(nums)
+	sorted_list, _ := utils.Sort(nums)
 	list_len := len(sorted_list)
 	mid_point := int((list_len + 1) / 2) // mid point is n/2+1 for odd length slice and n/2 for even length slice
 

@@ -28,7 +28,7 @@ func hackerlandRadioTransmitters(x []int, k int) int {
 	if x == nil {
 		return 0
 	}
-	x, _ = utils.SortList(x)
+	x, _ = utils.Sort(x)
 	fmt.Printf("Sorted array: %v\n", x)
 	nodes := []int{}
 

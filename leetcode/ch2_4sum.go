@@ -48,7 +48,7 @@ func twoSum(nums []int, target int) [][]int {
 
 	for lo < hi {
 		if nums[lo]+nums[hi] == target {
-			combn, _ := utils.SortList([]int{nums[lo], nums[hi]})
+			combn, _ := utils.Sort([]int{nums[lo], nums[hi]})
 			combinations = append(combinations, combn)
 			lo++
 			hi--
@@ -86,7 +86,7 @@ func kSum(nums []int, target int, k int) [][]int {
 		combs := kSum(new_nums, target-val, k-1)
 		if len(combs) != 0 {
 			for _, comb := range combs {
-				combn, _ := utils.SortList(append(comb, val))
+				combn, _ := utils.Sort(append(comb, val))
 				in_combinations := inCombinations(combinations, combn)
 				if !in_combinations {
 					combinations = append(combinations, combn)
@@ -100,7 +100,7 @@ func kSum(nums []int, target int, k int) [][]int {
 func Run_6() {
 	ip := []int{0, 1, 3, -5, 3, 0}
 	start := time.Now()
-	input, _ := utils.SortList(ip)
+	input, _ := utils.Sort(ip)
 	t := 1
 	combs := kSum(input, t, 4)
 	fmt.Printf("\ninput: %v, target: %d, combinations: %v, execution time: %s\n", input, t, combs, time.Since(start))

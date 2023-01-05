@@ -24,4 +24,5 @@ func main() {
 	hackerrank.Run_4()
 	hackerrank.Run_5()
 	misc.Run()
+	programming_challenges.Run_2()
 }

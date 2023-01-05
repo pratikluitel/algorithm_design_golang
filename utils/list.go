@@ -1,9 +1,8 @@
 package utils
 
-// TODO dtype independent sorting
 // sorts list, also returns an array with the indices from the old list
-func SortList(nums []int) ([]int, []int) {
-	sorted_list := []int{}
+func SortList[Sortable int | int32 | int64 | float32 | float64](nums []Sortable) ([]Sortable, []int) {
+	sorted_list := []Sortable{}
 	sorted_indices := []int{}
 	for jdx, num := range nums {
 		sorted_list = append(sorted_list, num)
